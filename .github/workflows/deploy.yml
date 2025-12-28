@@ -1,0 +1,34 @@
+name: Deploy Peta Gempa
+
+on:
+  push:
+    branches:
+      - main  # Ini branch utama (biasanya 'main')
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ambil File Repository
+        uses: actions/checkout@v3
+
+      - name: Siapkan Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Library
+        run: pip install -r requirements.txt
+
+      - name: Jalankan Script Peta
+        run: python generate_map.py
+
+      - name: Upload ke GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
